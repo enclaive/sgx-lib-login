@@ -1,0 +1,13 @@
+enclave {
+    struct user {
+	    char* username;
+	    char* password;
+    };
+
+    trusted {
+        public void ecall_add_user([in] struct user *t);
+    };
+
+    untrusted {
+    };
+};

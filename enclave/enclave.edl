@@ -1,13 +1,15 @@
 enclave {
     struct user {
-	    char* username;
-	    char* password;
+	char* username;
+	char* password;
     };
+    include "sgx_tcrypto.h"
 
     trusted {
         public void ecall_add_user([in] struct user *t);
     };
 
     untrusted {
+        void my_print([in, count=SGX_SHA256_HASH_SIZE] uint8_t* v);
     };
 };

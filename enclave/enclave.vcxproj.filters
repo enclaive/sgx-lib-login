@@ -29,7 +29,7 @@
     <ClInclude Include="$(projectname)_t.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="user_types.h">
+    <ClInclude Include="ILogin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

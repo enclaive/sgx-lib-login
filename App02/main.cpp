@@ -5,6 +5,10 @@
 #define ENCLAVE_FILE _T("enclave.signed.dll")
 #define MAX_BUF_LEN 100
 
+void my_print(uint8_t* v) {
+    printf("%s", v);
+}
+
 int main()
 {
     sgx_enclave_id_t eid;
@@ -17,6 +21,9 @@ int main()
         printf("App: error %#x, failed to create enclave.\n", ret);
         return -1;
     }
+
+    user usr = {(char*)"Foo", (char*)"Bar"};
+    ecall_add_user(eid, &usr);
     
     // Destroy the enclave when all Enclave calls finished.
     if (SGX_SUCCESS != sgx_destroy_enclave(eid))

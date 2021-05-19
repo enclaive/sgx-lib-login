@@ -7,6 +7,7 @@
 #include <string.h>
 #include "sgx_edger8r.h" /* for sgx_status_t etc. */
 
+#include "sgx_tcrypto.h"
 
 #define SGX_CAST(type, item) ((type)(item))
 
@@ -22,6 +23,10 @@ typedef struct user {
 } user;
 #endif
 
+#ifndef MY_PRINT_DEFINED__
+#define MY_PRINT_DEFINED__
+void SGX_UBRIDGE(SGX_NOCONVENTION, my_print, (uint8_t* v));
+#endif
 
 sgx_status_t ecall_add_user(sgx_enclave_id_t eid, struct user* t);
 

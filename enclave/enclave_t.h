@@ -6,6 +6,7 @@
 #include <stddef.h>
 #include "sgx_edger8r.h" /* for sgx_ocall etc. */
 
+#include "sgx_tcrypto.h"
 
 #define SGX_CAST(type, item) ((type)(item))
 
@@ -23,6 +24,7 @@ typedef struct user {
 
 void ecall_add_user(struct user* t);
 
+sgx_status_t SGX_CDECL my_print(uint8_t* v);
 
 #ifdef __cplusplus
 }

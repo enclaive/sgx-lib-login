@@ -2,4 +2,4 @@
 
 
 # Contributors
-Torsten Kiesel, Jesper Schwarz
+Malte Jensen, Torsten Kiesel, Jesper Schwarz

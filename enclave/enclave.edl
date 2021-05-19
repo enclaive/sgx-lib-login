@@ -1,9 +1,12 @@
 enclave {
+    from "sgx_tprotected_fs.edl" import *;
     struct user {
 	char* username;
 	char* password;
     };
     include "sgx_tcrypto.h"
+    include "sgx_tprotected_fs.h"
+
 
     trusted {
         public void ecall_add_user([in] struct user *t);

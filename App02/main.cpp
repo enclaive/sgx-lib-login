@@ -1,9 +1,14 @@
 #include <stdio.h>
+#include <fstream>
+#include <iostream>
+#include <vector>
 #include <tchar.h>
 #include "sgx_urts.h"
 #include "enclave_u.h"
 #define ENCLAVE_FILE _T("enclave.signed.dll")
 #define MAX_BUF_LEN 100
+#define MAX_STRING 255
+#define MAX_USER 255
 
 void my_print(uint8_t* v) {
     printf("%s", v);
@@ -21,8 +26,14 @@ int main()
         printf("App: error %#x, failed to create enclave.\n", ret);
         return -1;
     }
+    /*auto user_list = ocall_read_from_file((char*)"test.txt");
+    size_t size = (sizeof(user_list[0]) / sizeof(user_list));
 
-    user usr = {(char*)"Foo", (char*)"Bar"};
+    for (size_t i = 0; i < size; ++i) {
+        std::cout << "name: " << user_list[i].username << "\npassword: " << user_list[i].password << std::endl;
+    }*/
+
+    user usr = {(char*)"Foo", (char*)"Baeererer"};
     ecall_add_user(eid, &usr);
     
     // Destroy the enclave when all Enclave calls finished.

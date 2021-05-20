@@ -24,8 +24,11 @@ typedef struct user {
 #endif
 
 void ecall_add_user(struct user* t);
+int ecall_validate_login(struct user* u);
+char* ecall_hash_password(const char* password);
+void e_call_print_all_user(void);
 
-sgx_status_t SGX_CDECL my_print(uint8_t* v);
+sgx_status_t SGX_CDECL my_print(char* v);
 sgx_status_t SGX_CDECL u_sgxprotectedfs_exclusive_file_open(void** retval, const char* filename, uint8_t read_only, int64_t* file_size, int32_t* error_code);
 sgx_status_t SGX_CDECL u_sgxprotectedfs_check_if_file_exists(uint8_t* retval, const char* filename);
 sgx_status_t SGX_CDECL u_sgxprotectedfs_fread_node(int32_t* retval, void* f, uint64_t node_number, uint8_t* buffer, uint32_t node_size);

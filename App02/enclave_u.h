@@ -26,7 +26,7 @@ typedef struct user {
 
 #ifndef MY_PRINT_DEFINED__
 #define MY_PRINT_DEFINED__
-void SGX_UBRIDGE(SGX_NOCONVENTION, my_print, (uint8_t* v));
+void SGX_UBRIDGE(SGX_NOCONVENTION, my_print, (char* v));
 #endif
 #ifndef U_SGXPROTECTEDFS_EXCLUSIVE_FILE_OPEN_DEFINED__
 #define U_SGXPROTECTEDFS_EXCLUSIVE_FILE_OPEN_DEFINED__
@@ -106,6 +106,9 @@ int SGX_UBRIDGE(SGX_CDECL, sgx_thread_set_multiple_untrusted_events_ocall, (cons
 #endif
 
 sgx_status_t ecall_add_user(sgx_enclave_id_t eid, struct user* t);
+sgx_status_t ecall_validate_login(sgx_enclave_id_t eid, int* retval, struct user* u);
+sgx_status_t ecall_hash_password(sgx_enclave_id_t eid, char** retval, const char* password);
+sgx_status_t e_call_print_all_user(sgx_enclave_id_t eid);
 
 #ifdef __cplusplus
 }

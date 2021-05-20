@@ -5,8 +5,19 @@ typedef struct ms_ecall_add_user_t {
 	struct user* ms_t;
 } ms_ecall_add_user_t;
 
+typedef struct ms_ecall_validate_login_t {
+	int ms_retval;
+	struct user* ms_u;
+} ms_ecall_validate_login_t;
+
+typedef struct ms_ecall_hash_password_t {
+	char* ms_retval;
+	const char* ms_password;
+	size_t ms_password_len;
+} ms_ecall_hash_password_t;
+
 typedef struct ms_my_print_t {
-	uint8_t* ms_v;
+	char* ms_v;
 } ms_my_print_t;
 
 typedef struct ms_u_sgxprotectedfs_exclusive_file_open_t {
@@ -328,6 +339,34 @@ sgx_status_t ecall_add_user(sgx_enclave_id_t eid, struct user* t)
 	ms_ecall_add_user_t ms;
 	ms.ms_t = t;
 	status = sgx_ecall(eid, 0, &ocall_table_enclave, &ms);
+	return status;
+}
+
+sgx_status_t ecall_validate_login(sgx_enclave_id_t eid, int* retval, struct user* u)
+{
+	sgx_status_t status;
+	ms_ecall_validate_login_t ms;
+	ms.ms_u = u;
+	status = sgx_ecall(eid, 1, &ocall_table_enclave, &ms);
+	if (status == SGX_SUCCESS && retval) *retval = ms.ms_retval;
+	return status;
+}
+
+sgx_status_t ecall_hash_password(sgx_enclave_id_t eid, char** retval, const char* password)
+{
+	sgx_status_t status;
+	ms_ecall_hash_password_t ms;
+	ms.ms_password = password;
+	ms.ms_password_len = password ? strlen(password) + 1 : 0;
+	status = sgx_ecall(eid, 2, &ocall_table_enclave, &ms);
+	if (status == SGX_SUCCESS && retval) *retval = ms.ms_retval;
+	return status;
+}
+
+sgx_status_t e_call_print_all_user(sgx_enclave_id_t eid)
+{
+	sgx_status_t status;
+	status = sgx_ecall(eid, 3, &ocall_table_enclave, NULL);
 	return status;
 }
 

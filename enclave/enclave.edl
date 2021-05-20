@@ -10,9 +10,12 @@ enclave {
 
     trusted {
         public void ecall_add_user([in] struct user *t);
+        public int ecall_validate_login([in] struct user *u);
+        public char* ecall_hash_password([in, string] const char* password);
+        public void e_call_print_all_user(void);
     };
 
     untrusted {
-        void my_print([in, count=SGX_SHA256_HASH_SIZE] uint8_t* v);
+        void my_print([in, string] char* v);
     };
 };

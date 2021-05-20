@@ -31,8 +31,19 @@ typedef struct ms_ecall_add_user_t {
 	struct user* ms_t;
 } ms_ecall_add_user_t;
 
+typedef struct ms_ecall_validate_login_t {
+	int ms_retval;
+	struct user* ms_u;
+} ms_ecall_validate_login_t;
+
+typedef struct ms_ecall_hash_password_t {
+	char* ms_retval;
+	const char* ms_password;
+	size_t ms_password_len;
+} ms_ecall_hash_password_t;
+
 typedef struct ms_my_print_t {
-	uint8_t* ms_v;
+	char* ms_v;
 } ms_my_print_t;
 
 typedef struct ms_u_sgxprotectedfs_exclusive_file_open_t {
@@ -206,50 +217,149 @@ err:
 	return status;
 }
 
+static sgx_status_t SGX_CDECL sgx_ecall_validate_login(void* pms)
+{
+	CHECK_REF_POINTER(pms, sizeof(ms_ecall_validate_login_t));
+	//
+	// fence after pointer checks
+	//
+	sgx_lfence();
+	ms_ecall_validate_login_t* ms = SGX_CAST(ms_ecall_validate_login_t*, pms);
+	sgx_status_t status = SGX_SUCCESS;
+	struct user* _tmp_u = ms->ms_u;
+	size_t _len_u = sizeof(struct user);
+	struct user* _in_u = NULL;
+
+	CHECK_UNIQUE_POINTER(_tmp_u, _len_u);
+
+	//
+	// fence after pointer checks
+	//
+	sgx_lfence();
+
+	if (_tmp_u != NULL && _len_u != 0) {
+		_in_u = (struct user*)malloc(_len_u);
+		if (_in_u == NULL) {
+			status = SGX_ERROR_OUT_OF_MEMORY;
+			goto err;
+		}
+
+		if (memcpy_s(_in_u, _len_u, _tmp_u, _len_u)) {
+			status = SGX_ERROR_UNEXPECTED;
+			goto err;
+		}
+
+	}
+
+	ms->ms_retval = ecall_validate_login(_in_u);
+
+err:
+	if (_in_u) free(_in_u);
+	return status;
+}
+
+static sgx_status_t SGX_CDECL sgx_ecall_hash_password(void* pms)
+{
+	CHECK_REF_POINTER(pms, sizeof(ms_ecall_hash_password_t));
+	//
+	// fence after pointer checks
+	//
+	sgx_lfence();
+	ms_ecall_hash_password_t* ms = SGX_CAST(ms_ecall_hash_password_t*, pms);
+	sgx_status_t status = SGX_SUCCESS;
+	const char* _tmp_password = ms->ms_password;
+	size_t _len_password = ms->ms_password_len ;
+	char* _in_password = NULL;
+
+	CHECK_UNIQUE_POINTER(_tmp_password, _len_password);
+
+	//
+	// fence after pointer checks
+	//
+	sgx_lfence();
+
+	if (_tmp_password != NULL && _len_password != 0) {
+		_in_password = (char*)malloc(_len_password);
+		if (_in_password == NULL) {
+			status = SGX_ERROR_OUT_OF_MEMORY;
+			goto err;
+		}
+
+		if (memcpy_s(_in_password, _len_password, _tmp_password, _len_password)) {
+			status = SGX_ERROR_UNEXPECTED;
+			goto err;
+		}
+
+		_in_password[_len_password - 1] = '\0';
+		if (_len_password != strlen(_in_password) + 1)
+		{
+			status = SGX_ERROR_UNEXPECTED;
+			goto err;
+		}
+	}
+
+	ms->ms_retval = ecall_hash_password((const char*)_in_password);
+
+err:
+	if (_in_password) free(_in_password);
+	return status;
+}
+
+static sgx_status_t SGX_CDECL sgx_e_call_print_all_user(void* pms)
+{
+	sgx_status_t status = SGX_SUCCESS;
+	if (pms != NULL) return SGX_ERROR_INVALID_PARAMETER;
+	e_call_print_all_user();
+	return status;
+}
+
 SGX_EXTERNC const struct {
 	size_t nr_ecall;
-	struct {void* call_addr; uint8_t is_priv; uint8_t is_switchless;} ecall_table[1];
+	struct {void* call_addr; uint8_t is_priv; uint8_t is_switchless;} ecall_table[4];
 } g_ecall_table = {
-	1,
+	4,
 	{
 		{(void*)(uintptr_t)sgx_ecall_add_user, 0, 0},
+		{(void*)(uintptr_t)sgx_ecall_validate_login, 0, 0},
+		{(void*)(uintptr_t)sgx_ecall_hash_password, 0, 0},
+		{(void*)(uintptr_t)sgx_e_call_print_all_user, 0, 0},
 	}
 };
 
 SGX_EXTERNC const struct {
 	size_t nr_ocall;
-	uint8_t entry_table[20][1];
+	uint8_t entry_table[20][4];
 } g_dyn_entry_table = {
 	20,
 	{
-		{0, },
-		{0, },
-		{0, },
-		{0, },
-		{0, },
-		{0, },
-		{0, },
-		{0, },
-		{0, },
-		{0, },
-		{0, },
-		{0, },
-		{0, },
-		{0, },
-		{0, },
-		{0, },
-		{0, },
-		{0, },
-		{0, },
-		{0, },
+		{0, 0, 0, 0, },
+		{0, 0, 0, 0, },
+		{0, 0, 0, 0, },
+		{0, 0, 0, 0, },
+		{0, 0, 0, 0, },
+		{0, 0, 0, 0, },
+		{0, 0, 0, 0, },
+		{0, 0, 0, 0, },
+		{0, 0, 0, 0, },
+		{0, 0, 0, 0, },
+		{0, 0, 0, 0, },
+		{0, 0, 0, 0, },
+		{0, 0, 0, 0, },
+		{0, 0, 0, 0, },
+		{0, 0, 0, 0, },
+		{0, 0, 0, 0, },
+		{0, 0, 0, 0, },
+		{0, 0, 0, 0, },
+		{0, 0, 0, 0, },
+		{0, 0, 0, 0, },
 	}
 };
 
 
-sgx_status_t SGX_CDECL my_print(uint8_t* v)
+sgx_status_t SGX_CDECL my_print(char* v)
 {
 	sgx_status_t status = SGX_SUCCESS;
-	size_t _len_v = SGX_SHA256_HASH_SIZE * sizeof(uint8_t);
+	size_t _len_v = v ? strlen(v) + 1 : 0;
 
 	ms_my_print_t* ms = NULL;
 	size_t ocalloc_size = sizeof(ms_my_print_t);
@@ -271,7 +381,7 @@ sgx_status_t SGX_CDECL my_print(uint8_t* v)
 	ocalloc_size -= sizeof(ms_my_print_t);
 
 	if (v != NULL) {
-		ms->ms_v = (uint8_t*)__tmp;
+		ms->ms_v = (char*)__tmp;
 		if (_len_v % sizeof(*v) != 0) {
 			sgx_ocfree();
 			return SGX_ERROR_INVALID_PARAMETER;

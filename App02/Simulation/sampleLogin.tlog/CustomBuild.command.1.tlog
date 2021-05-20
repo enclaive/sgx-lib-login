@@ -1,0 +1,2 @@
+^C:\USERS\JESPE\SOURCE\REPOS\PO_IT_SEC_INTEL_SGX\ENCLAVE\ENCLAVE.EDL
+"C:\Program Files (x86)\Intel\IntelSGXSDK\\bin\win32\Release\sgx_edger8r.exe" --untrusted ".\..\enclave\enclave.edl" --search-path ".\..\enclave;C:\Program Files (x86)\Intel\IntelSGXSDK\\include"

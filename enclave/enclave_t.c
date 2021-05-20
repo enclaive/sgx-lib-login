@@ -28,6 +28,7 @@
 
 
 typedef struct ms_ecall_add_user_t {
+	int ms_retval;
 	struct user* ms_t;
 } ms_ecall_add_user_t;
 
@@ -210,7 +211,7 @@ static sgx_status_t SGX_CDECL sgx_ecall_add_user(void* pms)
 
 	}
 
-	ecall_add_user(_in_t);
+	ms->ms_retval = ecall_add_user(_in_t);
 
 err:
 	if (_in_t) free(_in_t);

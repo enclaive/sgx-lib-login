@@ -2,6 +2,7 @@
 #include <errno.h>
 
 typedef struct ms_ecall_add_user_t {
+	int ms_retval;
 	struct user* ms_t;
 } ms_ecall_add_user_t;
 
@@ -333,12 +334,13 @@ static const struct {
 	}
 };
 
-sgx_status_t ecall_add_user(sgx_enclave_id_t eid, struct user* t)
+sgx_status_t ecall_add_user(sgx_enclave_id_t eid, int* retval, struct user* t)
 {
 	sgx_status_t status;
 	ms_ecall_add_user_t ms;
 	ms.ms_t = t;
 	status = sgx_ecall(eid, 0, &ocall_table_enclave, &ms);
+	if (status == SGX_SUCCESS && retval) *retval = ms.ms_retval;
 	return status;
 }
 

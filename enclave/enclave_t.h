@@ -23,7 +23,7 @@ typedef struct user {
 } user;
 #endif
 
-void ecall_add_user(struct user* t);
+int ecall_add_user(struct user* t);
 int ecall_validate_login(struct user* u);
 char* ecall_hash_password(const char* password);
 void e_call_print_all_user(void);

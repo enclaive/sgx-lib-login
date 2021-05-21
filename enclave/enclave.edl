@@ -12,10 +12,11 @@ enclave {
         public int ecall_add_user([in] struct user *t);
         public int ecall_validate_login([in] struct user *u);
         public char* ecall_hash_password([in, string] const char* password);
-        public void e_call_print_all_user(void);
+        public void ecall_print_all_user(void);
+        public void ecall_remove_all_credentials(void);
     };
 
     untrusted {
-        void my_print([in, string] char* v);
+        void console_output([in, string] char* v);
     };
 };

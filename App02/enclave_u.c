@@ -17,9 +17,9 @@ typedef struct ms_ecall_hash_password_t {
 	size_t ms_password_len;
 } ms_ecall_hash_password_t;
 
-typedef struct ms_my_print_t {
+typedef struct ms_console_output_t {
 	char* ms_v;
-} ms_my_print_t;
+} ms_console_output_t;
 
 typedef struct ms_u_sgxprotectedfs_exclusive_file_open_t {
 	void* ms_retval;
@@ -145,10 +145,10 @@ typedef struct ms_sgx_thread_set_multiple_untrusted_events_ocall_t {
 	size_t ms_total;
 } ms_sgx_thread_set_multiple_untrusted_events_ocall_t;
 
-static sgx_status_t SGX_CDECL enclave_my_print(void* pms)
+static sgx_status_t SGX_CDECL enclave_console_output(void* pms)
 {
-	ms_my_print_t* ms = SGX_CAST(ms_my_print_t*, pms);
-	my_print(ms->ms_v);
+	ms_console_output_t* ms = SGX_CAST(ms_console_output_t*, pms);
+	console_output(ms->ms_v);
 
 	return SGX_SUCCESS;
 }
@@ -311,7 +311,7 @@ static const struct {
 } ocall_table_enclave = {
 	20,
 	{
-		(void*)(uintptr_t)enclave_my_print,
+		(void*)(uintptr_t)enclave_console_output,
 		(void*)(uintptr_t)enclave_u_sgxprotectedfs_exclusive_file_open,
 		(void*)(uintptr_t)enclave_u_sgxprotectedfs_check_if_file_exists,
 		(void*)(uintptr_t)enclave_u_sgxprotectedfs_fread_node,
@@ -365,10 +365,17 @@ sgx_status_t ecall_hash_password(sgx_enclave_id_t eid, char** retval, const char
 	return status;
 }
 
-sgx_status_t e_call_print_all_user(sgx_enclave_id_t eid)
+sgx_status_t ecall_print_all_user(sgx_enclave_id_t eid)
 {
 	sgx_status_t status;
 	status = sgx_ecall(eid, 3, &ocall_table_enclave, NULL);
+	return status;
+}
+
+sgx_status_t ecall_remove_all_credentials(sgx_enclave_id_t eid)
+{
+	sgx_status_t status;
+	status = sgx_ecall(eid, 4, &ocall_table_enclave, NULL);
 	return status;
 }
 

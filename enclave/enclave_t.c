@@ -43,9 +43,9 @@ typedef struct ms_ecall_hash_password_t {
 	size_t ms_password_len;
 } ms_ecall_hash_password_t;
 
-typedef struct ms_my_print_t {
+typedef struct ms_console_output_t {
 	char* ms_v;
-} ms_my_print_t;
+} ms_console_output_t;
 
 typedef struct ms_u_sgxprotectedfs_exclusive_file_open_t {
 	void* ms_retval;
@@ -306,64 +306,73 @@ err:
 	return status;
 }
 
-static sgx_status_t SGX_CDECL sgx_e_call_print_all_user(void* pms)
+static sgx_status_t SGX_CDECL sgx_ecall_print_all_user(void* pms)
 {
 	sgx_status_t status = SGX_SUCCESS;
 	if (pms != NULL) return SGX_ERROR_INVALID_PARAMETER;
-	e_call_print_all_user();
+	ecall_print_all_user();
+	return status;
+}
+
+static sgx_status_t SGX_CDECL sgx_ecall_remove_all_credentials(void* pms)
+{
+	sgx_status_t status = SGX_SUCCESS;
+	if (pms != NULL) return SGX_ERROR_INVALID_PARAMETER;
+	ecall_remove_all_credentials();
 	return status;
 }
 
 SGX_EXTERNC const struct {
 	size_t nr_ecall;
-	struct {void* call_addr; uint8_t is_priv; uint8_t is_switchless;} ecall_table[4];
+	struct {void* call_addr; uint8_t is_priv; uint8_t is_switchless;} ecall_table[5];
 } g_ecall_table = {
-	4,
+	5,
 	{
 		{(void*)(uintptr_t)sgx_ecall_add_user, 0, 0},
 		{(void*)(uintptr_t)sgx_ecall_validate_login, 0, 0},
 		{(void*)(uintptr_t)sgx_ecall_hash_password, 0, 0},
-		{(void*)(uintptr_t)sgx_e_call_print_all_user, 0, 0},
+		{(void*)(uintptr_t)sgx_ecall_print_all_user, 0, 0},
+		{(void*)(uintptr_t)sgx_ecall_remove_all_credentials, 0, 0},
 	}
 };
 
 SGX_EXTERNC const struct {
 	size_t nr_ocall;
-	uint8_t entry_table[20][4];
+	uint8_t entry_table[20][5];
 } g_dyn_entry_table = {
 	20,
 	{
-		{0, 0, 0, 0, },
-		{0, 0, 0, 0, },
-		{0, 0, 0, 0, },
-		{0, 0, 0, 0, },
-		{0, 0, 0, 0, },
-		{0, 0, 0, 0, },
-		{0, 0, 0, 0, },
-		{0, 0, 0, 0, },
-		{0, 0, 0, 0, },
-		{0, 0, 0, 0, },
-		{0, 0, 0, 0, },
-		{0, 0, 0, 0, },
-		{0, 0, 0, 0, },
-		{0, 0, 0, 0, },
-		{0, 0, 0, 0, },
-		{0, 0, 0, 0, },
-		{0, 0, 0, 0, },
-		{0, 0, 0, 0, },
-		{0, 0, 0, 0, },
-		{0, 0, 0, 0, },
+		{0, 0, 0, 0, 0, },
+		{0, 0, 0, 0, 0, },
+		{0, 0, 0, 0, 0, },
+		{0, 0, 0, 0, 0, },
+		{0, 0, 0, 0, 0, },
+		{0, 0, 0, 0, 0, },
+		{0, 0, 0, 0, 0, },
+		{0, 0, 0, 0, 0, },
+		{0, 0, 0, 0, 0, },
+		{0, 0, 0, 0, 0, },
+		{0, 0, 0, 0, 0, },
+		{0, 0, 0, 0, 0, },
+		{0, 0, 0, 0, 0, },
+		{0, 0, 0, 0, 0, },
+		{0, 0, 0, 0, 0, },
+		{0, 0, 0, 0, 0, },
+		{0, 0, 0, 0, 0, },
+		{0, 0, 0, 0, 0, },
+		{0, 0, 0, 0, 0, },
+		{0, 0, 0, 0, 0, },
 	}
 };
 
 
-sgx_status_t SGX_CDECL my_print(char* v)
+sgx_status_t SGX_CDECL console_output(char* v)
 {
 	sgx_status_t status = SGX_SUCCESS;
 	size_t _len_v = v ? strlen(v) + 1 : 0;
 
-	ms_my_print_t* ms = NULL;
-	size_t ocalloc_size = sizeof(ms_my_print_t);
+	ms_console_output_t* ms = NULL;
+	size_t ocalloc_size = sizeof(ms_console_output_t);
 	void *__tmp = NULL;
 
 
@@ -377,9 +386,9 @@ sgx_status_t SGX_CDECL my_print(char* v)
 		sgx_ocfree();
 		return SGX_ERROR_UNEXPECTED;
 	}
-	ms = (ms_my_print_t*)__tmp;
-	__tmp = (void *)((size_t)__tmp + sizeof(ms_my_print_t));
-	ocalloc_size -= sizeof(ms_my_print_t);
+	ms = (ms_console_output_t*)__tmp;
+	__tmp = (void *)((size_t)__tmp + sizeof(ms_console_output_t));
+	ocalloc_size -= sizeof(ms_console_output_t);
 
 	if (v != NULL) {
 		ms->ms_v = (char*)__tmp;

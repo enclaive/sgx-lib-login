@@ -107,12 +107,15 @@ For installation instructions please refer to Intels setup-guides for [Windows](
 
 
 <!-- USAGE EXAMPLES -->
-<!-->## Usage
+## Usage
+### Sample
+Open the file **sgx_liblogin.sln** with Visual Studio and build the project **sampleLogin**.
+This project is a win32 console application with following features:
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
+* Create an user
+* Validate user credentials
+* Print all user
+* Remove all user credentials
 
 
 <!-- ROADMAP -->

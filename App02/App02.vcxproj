@@ -40,7 +40,7 @@
     <ProjectGuid>{3368d7d3-3f62-47ed-8136-7e82bbab0ded}</ProjectGuid>
     <RootNamespace>App02</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>sampleLogin</ProjectName>
+    <ProjectName>sample_Login</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -310,8 +310,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="enclave_u.h" />
-    <ClInclude Include="IUntrustedLogin.h" />
-    <ClInclude Include="Login.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\enclave\enclave.edl">

@@ -15,7 +15,7 @@ void console_output(char* v) {
 	printf("%s\n", v);
 }
 
-bool validate_credential_constraints(std::string& u_name, std::string& u_pw)  {
+bool validate_credential_constraints(std::string& u_name, std::string& u_pw) {
 	std::cout << "\n\nValidating credentials..." << std::endl;
 	if (u_name.size() < 5 || u_pw.size() < 5) {
 		std::cout << "Your username has to be at least 5 characters long.\n"
@@ -148,7 +148,7 @@ int main()
 			}
 		}
 		else {
-			std::cout << "An error occurred while running the enclave. Error code: " 
+			std::cout << "An error occurred while running the enclave. Error code: "
 				<< sgx_ret << std::endl;
 		}
 		break;

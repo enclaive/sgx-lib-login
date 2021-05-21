@@ -68,7 +68,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+![Screenshot](images/screenshot.PNG)
 
 This project offers basic login functionality inside an enclave.
 

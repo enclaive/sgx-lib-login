@@ -74,7 +74,7 @@ This project offers basic login functionality inside an enclave.
 
 * A ```.csv```-File containing user credentials is created and sealed inside the enclave
 
-* Passwords can be hashed inside the enclave
+* Password can be hashed inside the enclave
 
 * For demonstration purposes a list of existing user credentials can be printed out or deleted.
 
